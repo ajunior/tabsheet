@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TabCtl</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="main.js" defer></script>
+    </head>
+    <body>
+        <main class="app-shell">
+            <header class="topbar">
+                <div>
+                    <h1>TabCtl</h1>
+                    <p id="summary">Loading tabs...</p>
+                </div>
+                <div class="topbar-actions">
+                    <button id="bookmarkAllButton" class="secondary-button" type="button">Bookmark all</button>
+                    <button id="refreshButton" class="icon-button" type="button" title="Refresh tabs" aria-label="Refresh tabs">
+                        <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="toolbar" aria-label="Tab tools">
+                <label class="search-field">
+                    <span>Search</span>
+                    <input id="searchInput" type="search" placeholder="Title, URL, or window" autocomplete="off" />
+                </label>
+                <label class="select-field">
+                    <span>Status</span>
+                    <select id="statusFilter">
+                        <option value="all">All tabs</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="discarded">Sleeping</option>
+                        <option value="audible">Playing audio</option>
+                    </select>
+                </label>
+            </section>
+
+            <section id="message" class="message" hidden></section>
+
+            <section class="table-wrap" aria-label="Open tabs">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <button class="sort-button" type="button" data-sort="title">Name <span></span></button>
+                            </th>
+                            <th scope="col">Status</th>
+                            <th scope="col">
+                                <button class="sort-button" type="button" data-sort="openedAt">Opened <span></span></button>
+                            </th>
+                            <th scope="col">Activity</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabRows">
+                        <tr>
+                            <td colspan="5" class="empty-state">Loading tabs...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </body>
+</html>
