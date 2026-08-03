@@ -87,7 +87,7 @@ p {
 
 .toolbar {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) 180px;
+  grid-template-columns: minmax(260px, 1fr) 180px auto;
   gap: 12px;
   align-items: end;
   border-top: 0;
@@ -167,6 +167,12 @@ select:focus {
 .secondary-button:disabled {
   cursor: wait;
   opacity: 0.6;
+}
+
+.bulk-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .compact-button {
@@ -372,4 +378,19 @@ tbody tr.is-active {
   height: 180px;
   color: var(--muted);
   text-align: center;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .bulk-actions {
+    flex-wrap: wrap;
+  }
 }

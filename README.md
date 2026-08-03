@@ -8,6 +8,7 @@ A browser extension that shows your open tabs in a table instead of a dropdown l
 - Search by title, URL, or window
 - Filter by status (active, inactive, sleeping, playing audio)
 - Click a row to switch to that tab
+- Mute or sleep all tabs currently shown by the filters
 - Shows when each tab was opened (since the extension started)
 
 ## Load locally

@@ -13,6 +13,7 @@
     "default_title": "Open TabCtl"
   },
   "background": {
+    "scripts": ["service-worker.js"],
     "service_worker": "service-worker.js"
   },
   "permissions": [

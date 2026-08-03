@@ -17,6 +17,8 @@ const elements = {
   status: document.querySelector("#statusFilter"),
   refresh: document.querySelector("#refreshButton"),
   bookmarkAll: document.querySelector("#bookmarkAllButton"),
+  muteShown: document.querySelector("#muteShownButton"),
+  sleepShown: document.querySelector("#sleepShownButton"),
   message: document.querySelector("#message"),
   sortButtons: Array.from(document.querySelectorAll("[data-sort]"))
 };
@@ -41,6 +43,8 @@ function bindEvents() {
 
   elements.refresh.addEventListener("click", loadTabs);
   elements.bookmarkAll.addEventListener("click", bookmarkAllTabs);
+  elements.muteShown.addEventListener("click", muteShownTabs);
+  elements.sleepShown.addEventListener("click", sleepShownTabs);
 
   for (const button of elements.sortButtons) {
     button.addEventListener("click", () => {
@@ -85,6 +89,69 @@ async function bookmarkAllTabs() {
     setMessage(`Could not bookmark tabs: ${error.message}`, true);
   } finally {
     elements.bookmarkAll.disabled = false;
+  }
+}
+
+async function muteShownTabs() {
+  const tabs = getVisibleTabs().filter((tab) => !tab.mutedInfo?.muted);
+
+  if (!tabs.length) {
+    setMessage("No unmuted tabs in the current table.", true);
+    return;
+  }
+
+  setBulkButtonsDisabled(true);
+  setMessage("");
+
+  try {
+    const updatedTabs = [];
+
+    for (const tab of tabs) {
+      updatedTabs.push(await browserApi.tabs.update(tab.id, { muted: true }));
+    }
+
+    updateTabs(updatedTabs.map((tab) => ({
+      id: tab.id,
+      audible: tab.audible,
+      mutedInfo: tab.mutedInfo
+    })));
+
+    setMessage(`Muted ${updatedTabs.length} shown tabs.`, true);
+  } catch (error) {
+    setMessage(`Could not mute shown tabs: ${error.message}`, true);
+  } finally {
+    setBulkButtonsDisabled(false);
+  }
+}
+
+async function sleepShownTabs() {
+  const tabs = getVisibleTabs().filter((tab) => !tab.active && !tab.discarded);
+
+  if (!tabs.length) {
+    setMessage("No sleepable tabs in the current table.", true);
+    return;
+  }
+
+  setBulkButtonsDisabled(true);
+  setMessage("");
+
+  try {
+    const updatedTabs = [];
+
+    for (const tab of tabs) {
+      const discardedTab = await browserApi.tabs.discard(tab.id);
+      updatedTabs.push({
+        id: tab.id,
+        discarded: discardedTab?.discarded ?? true
+      });
+    }
+
+    updateTabs(updatedTabs);
+    setMessage(`Slept ${updatedTabs.length} shown tabs.`, true);
+  } catch (error) {
+    setMessage(`Could not sleep shown tabs: ${error.message}`, true);
+  } finally {
+    setBulkButtonsDisabled(false);
   }
 }
 
@@ -300,11 +367,10 @@ function createActionCell(tab) {
     sleepButton.addEventListener("click", async () => {
       try {
         const discardedTab = await browserApi.tabs.discard(tab.id);
-        state.tabs = state.tabs.map((item) => item.id === tab.id ? {
-          ...item,
+        updateTabs([{
+          id: tab.id,
           discarded: discardedTab?.discarded ?? true
-        } : item);
-        render();
+        }]);
       } catch (error) {
         setMessage(`Could not sleep tab: ${error.message}`, true);
       }
@@ -320,12 +386,11 @@ function createActionCell(tab) {
       const updatedTab = await browserApi.tabs.update(tab.id, {
         muted: !tab.mutedInfo?.muted
       });
-      state.tabs = state.tabs.map((item) => item.id === tab.id ? {
-        ...item,
+      updateTabs([{
+        id: tab.id,
         audible: updatedTab.audible,
         mutedInfo: updatedTab.mutedInfo
-      } : item);
-      render();
+      }]);
     });
     actions.append(muteButton);
   }
@@ -358,6 +423,22 @@ function renderSortIndicators() {
       ? state.sortDirection === "asc" ? "^" : "v"
       : "";
   }
+}
+
+function updateTabs(updates) {
+  const updatesById = new Map(updates.map((update) => [update.id, update]));
+
+  state.tabs = state.tabs.map((tab) => {
+    const update = updatesById.get(tab.id);
+    return update ? { ...tab, ...update } : tab;
+  });
+
+  render();
+}
+
+function setBulkButtonsDisabled(disabled) {
+  elements.muteShown.disabled = disabled;
+  elements.sleepShown.disabled = disabled;
 }
 
 function normalizeTitle(tab) {
