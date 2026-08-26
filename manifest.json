@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "TabSheet",
   "description": "See and manage all your open tabs in a sortable, searchable table.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "browser_specific_settings": {
     "gecko": {
       "id": "tabsheet@ajunior.github.io",
@@ -19,7 +19,9 @@
     "default_title": "Open TabSheet"
   },
   "background": {
-    "scripts": ["service-worker.js"],
+    "scripts": [
+      "service-worker.js"
+    ],
     "service_worker": "service-worker.js"
   },
   "permissions": [

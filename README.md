@@ -6,7 +6,7 @@ A browser extension that shows your open tabs in a sortable table instead of a d
 
 - Sortable table of all open tabs
 - Search by title, URL, or window
-- Filter by status (active, inactive, sleeping, playing audio)
+- Filter by status (active, inactive, sleeping, playing audio) or by duplicate URL
 - Click a row to switch to that tab
 - Mute or sleep all tabs currently shown by the filters
 - Bookmark all shown tabs into a dated folder

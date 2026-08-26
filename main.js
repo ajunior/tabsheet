@@ -198,11 +198,37 @@ function render() {
 
 function getVisibleTabs() {
   const multiplier = state.sortDirection === "asc" ? 1 : -1;
+  const duplicated = state.status === "duplicate" ? getDuplicateUrls() : null;
 
   return state.tabs
     .filter(matchesSearch)
-    .filter(matchesStatus)
+    .filter((tab) => matchesStatus(tab, duplicated))
     .sort((a, b) => compareTabs(a, b) * multiplier);
+}
+
+// Urls open in more than one tab. Matching is exact: two urls that differ only
+// by fragment or query are different pages often enough that treating them as
+// the same one would hide real tabs behind a filter meant to reveal clutter.
+function getDuplicateUrls() {
+  const counts = new Map();
+
+  for (const tab of state.tabs) {
+    if (!tab.url) {
+      continue;
+    }
+
+    counts.set(tab.url, (counts.get(tab.url) || 0) + 1);
+  }
+
+  const duplicated = new Set();
+
+  for (const [url, count] of counts) {
+    if (count > 1) {
+      duplicated.add(url);
+    }
+  }
+
+  return duplicated;
 }
 
 function matchesSearch(tab) {
@@ -221,7 +247,7 @@ function matchesSearch(tab) {
   return haystack.includes(state.search);
 }
 
-function matchesStatus(tab) {
+function matchesStatus(tab, duplicated) {
   switch (state.status) {
     case "active":
       return tab.active;
@@ -231,6 +257,8 @@ function matchesStatus(tab) {
       return tab.discarded;
     case "audible":
       return tab.audible;
+    case "duplicate":
+      return Boolean(tab.url) && duplicated.has(tab.url);
     default:
       return true;
   }
