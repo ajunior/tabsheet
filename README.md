@@ -27,3 +27,7 @@ A browser extension that shows your open tabs in a table instead of a dropdown l
 2. Select Load Temporary Add-on.
 3. Choose `manifest.json` from this project folder.
 4. Click the TabCtl extension icon to open the manager in a browser tab.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
