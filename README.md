@@ -2,9 +2,6 @@
 
 A browser extension that shows your open tabs in a sortable table instead of a dropdown list.
 
-> The repository, extension id, and release tags use the original `tabctl` name. `TabSheet` is the
-> published name, chosen because `tabctl` was already taken on both extension stores.
-
 ## Features
 
 - Sortable table of all open tabs

@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Renamed the published extension to **TabSheet**. `tabctl` was already taken by unrelated
-  extensions on both the Chrome Web Store and addons.mozilla.org. The repository, extension id, and
-  release tags keep the `tabctl` name.
+- Renamed the project to **TabSheet**, repository included. `tabctl` was already taken by unrelated
+  extensions on both the Chrome Web Store and addons.mozilla.org. GitHub redirects the old
+  `ajunior/tabctl` URL, and the `v0.1.0` tag predates the rename.
 - Replaced the remotely loaded Material Symbols webfont with inline SVG icons. The extension now
   makes no network requests at all, which removes a privacy disclosure from the store listing and
   fixes icons rendering as raw text (`refresh`, `bedtime`, `volume_up`) when offline.
@@ -48,5 +48,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bookmark all shown tabs into a dated folder.
 - MIT license.
 
-[0.2.0]: https://github.com/ajunior/tabctl/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/ajunior/tabctl/releases/tag/v0.1.0
+[0.2.0]: https://github.com/ajunior/tabsheet/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/ajunior/tabsheet/releases/tag/v0.1.0
