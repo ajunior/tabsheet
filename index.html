@@ -3,8 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>TabCtl</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" />
+        <title>TabSheet</title>
         <link rel="stylesheet" href="style.css" />
         <script src="main.js" defer></script>
     </head>
@@ -12,13 +11,15 @@
         <main class="app-shell">
             <header class="topbar">
                 <div>
-                    <h1>TabCtl</h1>
+                    <h1>TabSheet</h1>
                     <p id="summary">Loading tabs...</p>
                 </div>
                 <div class="topbar-actions">
                     <button id="bookmarkAllButton" class="secondary-button" type="button">Bookmark all</button>
                     <button id="refreshButton" class="icon-button" type="button" title="Refresh tabs" aria-label="Refresh tabs">
-                        <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" />
+                        </svg>
                     </button>
                 </div>
             </header>

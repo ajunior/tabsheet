@@ -1,5 +1,6 @@
 const browserApi = globalThis.browser || globalThis.chrome;
 const TAB_META_KEY = "tabMeta";
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 const state = {
   tabs: [],
@@ -73,7 +74,7 @@ async function bookmarkAllTabs() {
 
   try {
     const folder = await browserApi.bookmarks.create({
-      title: `TabCtl ${formatFolderDate(new Date())}`
+      title: `TabSheet ${formatFolderDate(new Date())}`
     });
 
     for (const tab of tabs) {
@@ -312,24 +313,45 @@ function createActivityCell(tab) {
   activity.className = "activity-icons";
 
   if (tab.discarded) {
-    activity.append(createActivityIcon("bedtime", "Sleeping"));
+    activity.append(createActivityIcon("sleeping", "Sleeping"));
   }
 
   if (tab.audible) {
-    activity.append(createActivityIcon("volume_up", "Playing audio"));
+    activity.append(createActivityIcon("audible", "Playing audio"));
   }
 
   cell.append(activity);
   return cell;
 }
 
+const ACTIVITY_ICON_PATHS = {
+  sleeping: ["M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"],
+  audible: [
+    "M4 9v6h4l5 5V4L8 9H4z",
+    "M16.5 12a3.5 3.5 0 0 0-2-3.15v6.3A3.5 3.5 0 0 0 16.5 12z",
+    "M14.5 3.23v2.06a6.5 6.5 0 0 1 0 13.42v2.06a8.5 8.5 0 0 0 0-17.54z"
+  ]
+};
+
 function createActivityIcon(type, label) {
   const icon = document.createElement("span");
+  const svg = document.createElementNS(SVG_NS, "svg");
 
-  icon.className = "activity-icon material-symbols-outlined is-on";
-  icon.textContent = type;
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+
+  for (const d of ACTIVITY_ICON_PATHS[type] || []) {
+    const path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute("d", d);
+    svg.append(path);
+  }
+
+  icon.className = "activity-icon is-on";
   icon.title = label;
   icon.setAttribute("aria-label", label);
+  icon.append(svg);
 
   return icon;
 }
@@ -383,14 +405,18 @@ function createActionCell(tab) {
     muteButton.type = "button";
     muteButton.textContent = tab.mutedInfo?.muted ? "Unmute" : "Mute";
     muteButton.addEventListener("click", async () => {
-      const updatedTab = await browserApi.tabs.update(tab.id, {
-        muted: !tab.mutedInfo?.muted
-      });
-      updateTabs([{
-        id: tab.id,
-        audible: updatedTab.audible,
-        mutedInfo: updatedTab.mutedInfo
-      }]);
+      try {
+        const updatedTab = await browserApi.tabs.update(tab.id, {
+          muted: !tab.mutedInfo?.muted
+        });
+        updateTabs([{
+          id: tab.id,
+          audible: updatedTab.audible,
+          mutedInfo: updatedTab.mutedInfo
+        }]);
+      } catch (error) {
+        setMessage(`Could not mute tab: ${error.message}`, true);
+      }
     });
     actions.append(muteButton);
   }
@@ -399,9 +425,13 @@ function createActionCell(tab) {
   closeButton.type = "button";
   closeButton.textContent = "Close";
   closeButton.addEventListener("click", async () => {
-    await browserApi.tabs.remove(tab.id);
-    state.tabs = state.tabs.filter((item) => item.id !== tab.id);
-    render();
+    try {
+      await browserApi.tabs.remove(tab.id);
+      state.tabs = state.tabs.filter((item) => item.id !== tab.id);
+      render();
+    } catch (error) {
+      setMessage(`Could not close tab: ${error.message}`, true);
+    }
   });
 
   actions.prepend(goButton);

@@ -1,6 +1,9 @@
-# tabctl
+# TabSheet
 
-A browser extension that shows your open tabs in a table instead of a dropdown list.
+A browser extension that shows your open tabs in a sortable table instead of a dropdown list.
+
+> The repository, extension id, and release tags use the original `tabctl` name. `TabSheet` is the
+> published name, chosen because `tabctl` was already taken on both extension stores.
 
 ## Features
 
@@ -9,7 +12,8 @@ A browser extension that shows your open tabs in a table instead of a dropdown l
 - Filter by status (active, inactive, sleeping, playing audio)
 - Click a row to switch to that tab
 - Mute or sleep all tabs currently shown by the filters
-- Shows when each tab was opened (since the extension started)
+- Bookmark all shown tabs into a dated folder
+- Shows when each tab was opened (within the current browser session)
 
 ## Load locally
 
@@ -19,14 +23,20 @@ A browser extension that shows your open tabs in a table instead of a dropdown l
 2. Enable Developer mode.
 3. Select Load unpacked.
 4. Choose this project folder.
-5. Click the TabCtl extension icon to open the manager in a browser tab.
+5. Click the TabSheet extension icon to open the manager in a browser tab.
 
 ### Firefox
 
 1. Open `about:debugging#/runtime/this-firefox`.
 2. Select Load Temporary Add-on.
 3. Choose `manifest.json` from this project folder.
-4. Click the TabCtl extension icon to open the manager in a browser tab.
+4. Click the TabSheet extension icon to open the manager in a browser tab.
+
+## Privacy
+
+TabSheet reads your open tabs and writes bookmarks only when you ask it to. Tab timestamps are kept
+in `storage.local` and are cleared when the browser restarts. Nothing is sent off your machine — the
+extension makes no network requests and bundles every asset it uses.
 
 ## License
 
