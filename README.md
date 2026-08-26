@@ -29,6 +29,19 @@ A browser extension that shows your open tabs in a sortable table instead of a d
 3. Choose `manifest.json` from this project folder.
 4. Click the TabSheet extension icon to open the manager in a browser tab.
 
+## Build store packages
+
+```
+./build.sh
+```
+
+Writes `dist/tabsheet-chrome-<version>.zip` and `dist/tabsheet-firefox-<version>.zip`.
+
+Chrome and Firefox disagree about Manifest V3 background scripts: Chrome only runs a service
+worker, and Firefox only runs an event page, with no service worker support. `manifest.json`
+declares both keys so the unpacked folder loads in either browser, and each package ships only the
+key its own store needs, so neither warns about the one it ignores.
+
 ## Privacy
 
 TabSheet reads your open tabs and writes bookmarks only when you ask it to. Tab timestamps are kept
